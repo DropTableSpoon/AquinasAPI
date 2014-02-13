@@ -21,7 +21,7 @@ namespace Aquinas.Api
         /// <param name="requestPath">The API request path. You can use the constants given in <see cref="ApiRequest"/>.</param>
         public ApiRequest(AuthenticationInfo authInfo, string requestPath)
         {
-            WebRequest = HttpWebRequest.CreateHttp(
+            WebRequest = System.Net.WebRequest.CreateHttp(
                 CreateApiUrl(authInfo, requestPath));
             WebRequest.ContentType = "application/xml";
             WebRequest.Headers["AuthToken"] = authInfo.Token.ToString();

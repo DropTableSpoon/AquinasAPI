@@ -70,7 +70,7 @@ namespace Aquinas.Api
         /// <returns>An XDocument containing the result of the request.</returns>
         public IAsyncResult BeginAuthenticate(string admissionNumber, AsyncCallback callback)
         {
-            HttpWebRequest request = HttpWebRequest.CreateHttp(
+            HttpWebRequest request = WebRequest.CreateHttp(
                 String.Format("https://www.my.aquinas.ac.uk/MobileAPI/api/Student/GetStudentName/{0}",
                             admissionNumber.ToUpper()));
             request.ContentType = "application/xml";
