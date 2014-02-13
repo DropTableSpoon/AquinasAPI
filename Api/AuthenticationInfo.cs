@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 
 namespace Aquinas.Api
@@ -71,7 +66,7 @@ namespace Aquinas.Api
         /// Begins an asynchronous API authentication request.
         /// </summary>
         /// <param name="admissionNumber"></param>
-        /// <param name="result">The IAsyncResult object representing the status of the asynchronous operation.</param>
+        /// <param name="callback">The asynchronous callback for the web request</param>
         /// <returns>An XDocument containing the result of the request.</returns>
         public IAsyncResult BeginAuthenticate(string admissionNumber, AsyncCallback callback)
         {
@@ -95,7 +90,15 @@ namespace Aquinas.Api
 
             XDocument document = XDocument.Load(response.GetResponseStream());
 
-            Token = new Guid(document.Element("Token").Value);
+            XElement tokenElement = document.Element("Token");
+            if (tokenElement != null)
+            {
+                Token = new Guid(tokenElement.Value);
+            }
+            else
+            {
+                throw new NullReferenceException("A token was not received from the server");
+            }
             return this;
         }
     }

@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Xml.Linq;
 using Aquinas.Api;
 
@@ -83,7 +80,22 @@ namespace Aquinas
         {
             XDocument basicInfoDocument = ((ApiRequest)result.AsyncState).EndApiRequest(result);
             XElement basicInfo = basicInfoDocument.Root;
-            FirstName = basicInfo.Element("stu_chosen_name").Value;
+            if (basicInfo != null)
+            {
+                XElement chosenName = basicInfo.Element("stu_chosen_name");
+                if (chosenName != null)
+                {
+                    FirstName = chosenName.Value;
+                }
+                else
+                {
+                    throw new NullReferenceException("The student's chosen name was not located");
+                }
+            }
+            else
+            {
+                throw new NullReferenceException("Basic info was not received");
+            }
         }
 
         /// <summary>
