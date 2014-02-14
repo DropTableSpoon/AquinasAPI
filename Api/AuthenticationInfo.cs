@@ -94,6 +94,7 @@ namespace Aquinas.Api
             if (tokenElement != null)
             {
                 Token = new Guid(tokenElement.Value);
+                Authenticated = true;
             }
             else
             {
