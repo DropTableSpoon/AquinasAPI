@@ -70,7 +70,7 @@ namespace Aquinas.Api
         /// <returns></returns>
         private string CreateApiUrl(AuthenticationInfo authInfo, string requestPath)
         {
-            return String.Format("https://www.my.aquinas.ac.uk/MobileAPI/api/{0}/{1}",
+            return String.Format(Properties.Resources.ApiTemplateUrl,
                 requestPath,
                 authInfo.AdmissionNumber);
         }

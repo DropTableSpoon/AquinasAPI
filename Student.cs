@@ -58,7 +58,7 @@ namespace Aquinas
         {
             aquinasNumber = aquinasNumber.ToUpper();
             AdmissionNumber = GetAdmissionNumber(aquinasNumber);
-            AuthInfo.BeginAuthenticate(AdmissionNumber, AuthenticationCallback);
+            AuthInfo.BeginAuthenticate(AuthenticationCallback);
         }
 
         /// <summary>
