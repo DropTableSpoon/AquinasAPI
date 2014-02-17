@@ -9,7 +9,14 @@ namespace Aquinas
     /// </summary>
     public class Student
     {
+        /// <summary>
+        /// Raised when this student is authenticated with the Aquinas server.
+        /// </summary>
         public event EventHandler<StudentUpdateEventArgs> Authenticated;
+
+        /// <summary>
+        /// Raised when this student's name is loaded.
+        /// </summary>
         public event EventHandler<StudentUpdateEventArgs> StudentNameLoaded;
 
         /// <summary>
@@ -81,6 +88,7 @@ namespace Aquinas
         private void AuthenticationCallback(IAsyncResult result)
         {
             AuthInfo.EndAuthenticate(result);
+            Authenticated.Raise(this, new StudentUpdateEventArgs(this));
             ApiRequest basicInfoRequest = new ApiRequest(AuthInfo, ApiRequest.GetStudentName);
             basicInfoRequest.BeginApiRequest(BasicInfoCallback);
         }
@@ -99,6 +107,7 @@ namespace Aquinas
                 if (chosenName != null)
                 {
                     FirstName = chosenName.Value;
+                    StudentNameLoaded.Raise(this, new StudentUpdateEventArgs(this));
                 }
                 else
                 {
