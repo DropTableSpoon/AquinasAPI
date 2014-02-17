@@ -9,6 +9,9 @@ namespace Aquinas
     /// </summary>
     public class Student
     {
+        public event EventHandler<StudentUpdateEventArgs> Authenticated;
+        public event EventHandler<StudentUpdateEventArgs> StudentNameLoaded;
+
         /// <summary>
         /// The first (chosen) name of the student.
         /// </summary>
