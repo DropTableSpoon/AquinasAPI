@@ -103,7 +103,7 @@ namespace Aquinas
             XElement basicInfo = basicInfoDocument.Element(XName.Get("StudentName", Properties.Resources.XmlNamespace));
             if (basicInfo != null)
             {
-                XElement chosenName = basicInfo.Element("stu_chosen_name");
+                XElement chosenName = basicInfo.Element(XName.Get("stu_chosen_name", Properties.Resources.XmlNamespace));
                 if (chosenName != null)
                 {
                     FirstName = chosenName.Value;
