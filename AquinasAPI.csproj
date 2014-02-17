@@ -38,6 +38,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Api\ApiRequest.cs" />
+    <Compile Include="Api\ApiRequestState.cs" />
     <Compile Include="Api\AuthenticationInfo.cs" />
     <Compile Include="Api\AuthenticationState.cs" />
     <Compile Include="Properties\Resources.Designer.cs">

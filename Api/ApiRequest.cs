@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Net;
 using System.Xml.Linq;
 
@@ -21,8 +22,13 @@ namespace Aquinas.Api
         /// <param name="requestPath">The API request path. You can use the constants given in <see cref="ApiRequest"/>.</param>
         public ApiRequest(AuthenticationInfo authInfo, string requestPath)
         {
+            if (!authInfo.Authenticated)
+            {
+                throw new InvalidOperationException("The AuthenticationInfo object must have been authenticated before usage in an API request.");
+            }
+
             WebRequest = System.Net.WebRequest.CreateHttp(
-                CreateApiUrl(authInfo, requestPath));
+                CreateApiUrl(requestPath));
             WebRequest.ContentType = "application/xml";
             WebRequest.Headers["AuthToken"] = authInfo.Token.ToString();
         }
@@ -36,6 +42,22 @@ namespace Aquinas.Api
         {
             return WebRequest.BeginGetResponse(callback, this);
         }
+
+        /*
+        /// <summary>
+        /// Writes the API request data to the stream and sends it asynchronously.
+        /// </summary>
+        /// <param name="result">The IAsyncResult object representing the status of the asynchronous operation.</param>
+        private void ApiRequestWriteAndSend(IAsyncResult result)
+        {
+            AuthenticationState state = ((AuthenticationState)result.AsyncState);
+            HttpWebRequest request = state.Request;
+            Stream requestStream = request.EndGetRequestStream(result); // Should this be closed or does HttpWebRequest do that itself?
+            XDocument requestBody = BuildRequestBody();
+            requestBody.Save(requestStream);
+            request.BeginGetResponse(state.Callback, this);
+        }
+        */
 
         /// <summary>
         /// Ends an asynchronous API request.
@@ -65,14 +87,12 @@ namespace Aquinas.Api
         /// <summary>
         /// Creates a valid API URL.
         /// </summary>
-        /// <param name="authInfo">Authentication info used to provide the admission number.</param>
         /// <param name="requestPath">The API request path. You can use the constants given in <see cref="ApiRequest"/>.</param>
         /// <returns></returns>
-        private string CreateApiUrl(AuthenticationInfo authInfo, string requestPath)
+        private string CreateApiUrl(string requestPath)
         {
             return String.Format(Properties.Resources.ApiTemplateUrl,
-                requestPath,
-                authInfo.AdmissionNumber);
+                requestPath);
         }
 
         /// <summary>

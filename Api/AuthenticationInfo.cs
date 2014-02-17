@@ -48,8 +48,13 @@ namespace Aquinas.Api
             }
         }
 
+        public bool Authenticated
+        {
+            get;
+            private set;
+        }
+
         private Guid _Token;
-        private bool Authenticated;
         private HttpWebRequest Request;
 
         /// <summary>
