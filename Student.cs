@@ -99,12 +99,12 @@ namespace Aquinas
                 }
                 else
                 {
-                    throw new NullReferenceException("Student's chosen name not present in the document.");
+                    throw new NullReferenceException(Properties.Resources.ExceptionStudentNameNotPresent);
                 }
             }
             else
             {
-                throw new NullReferenceException("No root tag present.");
+                throw new NullReferenceException(Properties.Resources.ExceptionMalformedXml);
             }
         }
 

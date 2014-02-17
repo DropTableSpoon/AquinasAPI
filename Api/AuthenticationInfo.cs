@@ -39,8 +39,7 @@ namespace Aquinas.Api
                 if (Authenticated)
                     return _Token;
                 else
-                    throw new InvalidOperationException("This AuthenticationInfo object has not yet been authenticated. " +
-                        "Use the BeginAuthenticate method to authenticate.");
+                    throw new InvalidOperationException(Properties.Resources.ExceptionNotYetAuthenticated);
             }
             private set
             {
@@ -140,7 +139,7 @@ namespace Aquinas.Api
             }
             else
             {
-                throw new NullReferenceException("A token was not received from the server.");
+                throw new NullReferenceException(Properties.Resources.ExceptionTokenNotReceived);
             }
             return this;
         }

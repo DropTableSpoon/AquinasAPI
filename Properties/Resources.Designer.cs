@@ -79,6 +79,60 @@ namespace Aquinas.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid username or password..
+        /// </summary>
+        internal static string ExceptionBadLogin {
+            get {
+                return ResourceManager.GetString("ExceptionBadLogin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unexpected status: {0}.
+        /// </summary>
+        internal static string ExceptionBadStatus {
+            get {
+                return ResourceManager.GetString("ExceptionBadStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No root tag present or otherwise malformed XML..
+        /// </summary>
+        internal static string ExceptionMalformedXml {
+            get {
+                return ResourceManager.GetString("ExceptionMalformedXml", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This AuthenticationInfo object has not yet been authenticated. Use the BeginAuthenticate method to authenticate..
+        /// </summary>
+        internal static string ExceptionNotYetAuthenticated {
+            get {
+                return ResourceManager.GetString("ExceptionNotYetAuthenticated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Student&apos;s chosen name not present in the document..
+        /// </summary>
+        internal static string ExceptionStudentNameNotPresent {
+            get {
+                return ResourceManager.GetString("ExceptionStudentNameNotPresent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A token was not received from the server..
+        /// </summary>
+        internal static string ExceptionTokenNotReceived {
+            get {
+                return ResourceManager.GetString("ExceptionTokenNotReceived", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to http://schemas.datacontract.org/2004/07/Aquinas.MobileAPI.Controllers.
         /// </summary>
         internal static string XmlNamespace {

@@ -123,6 +123,24 @@
   <data name="AuthenticationUrl" xml:space="preserve">
     <value>https://www.my.aquinas.ac.uk/MobileAPI/api/Auth/GetToken</value>
   </data>
+  <data name="ExceptionBadLogin" xml:space="preserve">
+    <value>Invalid username or password.</value>
+  </data>
+  <data name="ExceptionBadStatus" xml:space="preserve">
+    <value>Unexpected status: {0}</value>
+  </data>
+  <data name="ExceptionMalformedXml" xml:space="preserve">
+    <value>No root tag present or otherwise malformed XML.</value>
+  </data>
+  <data name="ExceptionNotYetAuthenticated" xml:space="preserve">
+    <value>This AuthenticationInfo object has not yet been authenticated. Use the BeginAuthenticate method to authenticate.</value>
+  </data>
+  <data name="ExceptionStudentNameNotPresent" xml:space="preserve">
+    <value>Student's chosen name not present in the document.</value>
+  </data>
+  <data name="ExceptionTokenNotReceived" xml:space="preserve">
+    <value>A token was not received from the server.</value>
+  </data>
   <data name="XmlNamespace" xml:space="preserve">
     <value>http://schemas.datacontract.org/2004/07/Aquinas.MobileAPI.Controllers</value>
   </data>

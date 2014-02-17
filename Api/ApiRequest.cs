@@ -54,11 +54,13 @@ namespace Aquinas.Api
             }
             else if (response.StatusCode == HttpStatusCode.Unauthorized)
             {
-                throw new UnauthorizedAccessException("Invalid authentication token.");
+                throw new UnauthorizedAccessException(Properties.Resources.ExceptionBadLogin);
             }
             else
             {
-                throw new Exception("Unexpected status: " + response.StatusDescription);
+                throw new Exception(
+                    String.Format(Properties.Resources.ExceptionBadStatus,
+                    response.StatusDescription));
             }
         }
 
