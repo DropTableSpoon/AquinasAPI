@@ -38,7 +38,7 @@ namespace Aquinas.Api
                 if (Authenticated)
                     return _Token;
                 else
-                    throw new InvalidOperationException("This AuthenticationInfo object has not yet been authenticated." +
+                    throw new InvalidOperationException("This AuthenticationInfo object has not yet been authenticated. " +
                         "Use the BeginAuthenticate method to authenticate.");
             }
             private set
@@ -127,7 +127,7 @@ namespace Aquinas.Api
         public AuthenticationInfo EndAuthenticate(IAsyncResult result)
         {
             HttpWebRequest request = (HttpWebRequest)result.AsyncState;
-            HttpWebResponse response = (HttpWebResponse)request.EndGetResponse(result);
+            HttpWebResponse response = (HttpWebResponse)request.EndGetResponse(result); // this is what was throwing the exception about the 405 Method Not Allowed
 
             XDocument document = XDocument.Load(response.GetResponseStream());
 
