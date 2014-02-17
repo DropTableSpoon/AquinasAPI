@@ -9,7 +9,7 @@ namespace Aquinas.Api
     /// <summary>
     /// Represents authentication info used to connect to the server.
     /// </summary>
-    public struct AuthenticationInfo
+    public class AuthenticationInfo
     {
         /// <summary>
         /// The long-form admission number.
@@ -59,7 +59,6 @@ namespace Aquinas.Api
         /// <param name="password">The user's password.</param>
         /// <param name="token">The token GUID used to validate requests.</param>
         public AuthenticationInfo(string admissionNumber, string password, Guid token)
-            : this()
         {
             AdmissionNumber = admissionNumber;
             Password = password;
@@ -72,7 +71,6 @@ namespace Aquinas.Api
         /// <param name="admissionNumber">The long-form admission number.</param>
         /// <param name="password">The user's password.</param>
         public AuthenticationInfo(string admissionNumber, string password)
-            : this()
         {
             AdmissionNumber = admissionNumber;
             Password = password;
@@ -128,7 +126,7 @@ namespace Aquinas.Api
         /// <returns>Returns this object.</returns>
         public AuthenticationInfo EndAuthenticate(IAsyncResult result)
         {
-            HttpWebRequest request = ((AuthenticationInfo)result.AsyncState).Request;
+            HttpWebRequest request = (result.AsyncState as AuthenticationInfo).Request;
             HttpWebResponse response = (HttpWebResponse)request.EndGetResponse(result); // this is what was throwing the exception about the 405 Method Not Allowed
 
             XDocument document = XDocument.Load(response.GetResponseStream());
