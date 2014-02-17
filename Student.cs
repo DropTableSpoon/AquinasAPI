@@ -68,7 +68,7 @@ namespace Aquinas
         private void AuthenticationCallback(IAsyncResult result)
         {
             AuthInfo.EndAuthenticate(result);
-            ApiRequest basicInfoRequest = new ApiRequest(AuthInfo, ApiRequest.GetStudentDetails);
+            ApiRequest basicInfoRequest = new ApiRequest(AuthInfo, ApiRequest.GetStudentName);
             basicInfoRequest.BeginApiRequest(BasicInfoCallback);
         }
 
