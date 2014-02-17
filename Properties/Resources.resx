@@ -141,6 +141,9 @@
   <data name="ExceptionTokenNotReceived" xml:space="preserve">
     <value>A token was not received from the server.</value>
   </data>
+  <data name="ExceptionUnauthenticatedState" xml:space="preserve">
+    <value>The given AuthenticationInfo object has not yet been authenticated by the server.</value>
+  </data>
   <data name="XmlNamespace" xml:space="preserve">
     <value>http://schemas.datacontract.org/2004/07/Aquinas.MobileAPI.Controllers</value>
   </data>

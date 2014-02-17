@@ -47,8 +47,16 @@ namespace Aquinas.Api
             }
         }
 
+        /// <summary>
+        /// Gets whether this AuthenticationInfo has been authenticated by the MyAquinas server.
+        /// </summary>
+        public bool Authenticated
+        {
+            get;
+            private set;
+        }
+
         private Guid _Token;
-        private bool Authenticated;
         private HttpWebRequest Request;
 
         /// <summary>
@@ -58,10 +66,10 @@ namespace Aquinas.Api
         /// <param name="password">The user's password.</param>
         /// <param name="token">The token GUID used to validate requests.</param>
         public AuthenticationInfo(string admissionNumber, string password, Guid token)
+            : this(admissionNumber, password)
         {
-            AdmissionNumber = admissionNumber;
-            Password = password;
             Token = token;
+            Authenticated = true;
         }
 
         /// <summary>
@@ -73,6 +81,7 @@ namespace Aquinas.Api
         {
             AdmissionNumber = admissionNumber;
             Password = password;
+            Authenticated = false;
         }
 
         /// <summary>

@@ -133,6 +133,15 @@ namespace Aquinas.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The given AuthenticationInfo object has not yet been authenticated by the server..
+        /// </summary>
+        internal static string ExceptionUnauthenticatedState {
+            get {
+                return ResourceManager.GetString("ExceptionUnauthenticatedState", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to http://schemas.datacontract.org/2004/07/Aquinas.MobileAPI.Controllers.
         /// </summary>
         internal static string XmlNamespace {
