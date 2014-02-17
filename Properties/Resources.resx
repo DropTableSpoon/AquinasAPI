@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ApiTemplateUrl" xml:space="preserve">
-    <value>https://www.my.aquinas.ac.uk/MobileAPI/api/{0}</value>
+    <value>https://www.my.aquinas.ac.uk/MobileAPI/api/{0}/{1}</value>
   </data>
   <data name="AuthenticationUrl" xml:space="preserve">
     <value>https://www.my.aquinas.ac.uk/MobileAPI/api/Auth/GetToken</value>

@@ -61,7 +61,7 @@ namespace Aquinas.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://www.my.aquinas.ac.uk/MobileAPI/api/{0}.
+        ///   Looks up a localized string similar to https://www.my.aquinas.ac.uk/MobileAPI/api/{0}/{1}.
         /// </summary>
         internal static string ApiTemplateUrl {
             get {
