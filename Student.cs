@@ -51,13 +51,23 @@ namespace Aquinas
         private AuthenticationInfo AuthInfo;
 
         /// <summary>
-        /// Initialises a new Student object and authenticates.
+        /// Initialises a new Student object.
         /// </summary>
         /// <param name="aquinasNumber">The short-form Aquinas number of the student.</param>
         public Student(string aquinasNumber)
         {
             aquinasNumber = aquinasNumber.ToUpper();
             AdmissionNumber = GetAdmissionNumber(aquinasNumber);
+        }
+
+        /// <summary>
+        /// Authenticates the user with the given password.
+        /// This will start an asynchronous authentication request.
+        /// </summary>
+        /// <param name="password">The user's login password.</param>
+        public void Authenticate(string password)
+        {
+            AuthInfo = new AuthenticationInfo(AdmissionNumber, password);
             AuthInfo.BeginAuthenticate(AuthenticationCallback);
         }
 
@@ -79,7 +89,7 @@ namespace Aquinas
         private void BasicInfoCallback(IAsyncResult result)
         {
             XDocument basicInfoDocument = ((ApiRequest)result.AsyncState).EndApiRequest(result);
-            XElement basicInfo = basicInfoDocument.Root;
+            XElement basicInfo = basicInfoDocument.Element(XName.Get("StudentName", Properties.Resources.XmlNamespace));
             if (basicInfo != null)
             {
                 XElement chosenName = basicInfo.Element("stu_chosen_name");
@@ -89,12 +99,12 @@ namespace Aquinas
                 }
                 else
                 {
-                    throw new NullReferenceException("The student's chosen name was not located");
+                    throw new NullReferenceException("Student's chosen name not present in the document.");
                 }
             }
             else
             {
-                throw new NullReferenceException("Basic info was not received");
+                throw new NullReferenceException("No root tag present.");
             }
         }
 
