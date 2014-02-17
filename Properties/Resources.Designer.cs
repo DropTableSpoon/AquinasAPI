@@ -77,5 +77,14 @@ namespace Aquinas.Properties {
                 return ResourceManager.GetString("AuthenticationUrl", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to http://schemas.datacontract.org/2004/07/Aquinas.MobileAPI.Controllers.
+        /// </summary>
+        internal static string XmlNamespace {
+            get {
+                return ResourceManager.GetString("XmlNamespace", resourceCulture);
+            }
+        }
     }
 }

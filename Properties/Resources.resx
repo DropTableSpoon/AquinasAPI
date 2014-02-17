@@ -123,4 +123,7 @@
   <data name="AuthenticationUrl" xml:space="preserve">
     <value>https://www.my.aquinas.ac.uk/MobileAPI/api/Auth/GetToken</value>
   </data>
+  <data name="XmlNamespace" xml:space="preserve">
+    <value>http://schemas.datacontract.org/2004/07/Aquinas.MobileAPI.Controllers</value>
+  </data>
 </root>

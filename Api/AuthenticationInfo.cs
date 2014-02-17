@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Net;
+using System.Linq;
 using System.Xml.Linq;
 
 namespace Aquinas.Api
@@ -49,6 +50,7 @@ namespace Aquinas.Api
 
         private Guid _Token;
         private bool Authenticated;
+        private HttpWebRequest Request;
 
         /// <summary>
         /// Create a new AuthenticationInfo object.
@@ -97,12 +99,12 @@ namespace Aquinas.Api
         /// <returns>An XDocument containing the result of the request.</returns>
         public IAsyncResult BeginAuthenticate(AsyncCallback callback)
         {
-            HttpWebRequest request = WebRequest.CreateHttp(
+            Request = WebRequest.CreateHttp(
                 Properties.Resources.AuthenticationUrl);
-            request.Method = "POST";
-            request.ContentType = "application/xml";
-            AuthenticationState state = new AuthenticationState(callback, request); // anonymous class for storing state
-            return request.BeginGetRequestStream(AuthenticateWriteAndSend, state);
+            Request.Method = "POST";
+            Request.ContentType = "application/xml";
+            AuthenticationState state = new AuthenticationState(callback, Request); // anonymous class for storing state
+            return Request.BeginGetRequestStream(AuthenticateWriteAndSend, state);
         }
 
         /// <summary>
@@ -116,7 +118,7 @@ namespace Aquinas.Api
             Stream requestStream = request.EndGetRequestStream(result); // Should this be closed or does HttpWebRequest do that itself?
             XDocument requestBody = BuildRequestBody();
             requestBody.Save(requestStream);
-            request.BeginGetResponse(state.Callback, request);
+            request.BeginGetResponse(state.Callback, this);
         }
 
         /// <summary>
@@ -126,12 +128,13 @@ namespace Aquinas.Api
         /// <returns>Returns this object.</returns>
         public AuthenticationInfo EndAuthenticate(IAsyncResult result)
         {
-            HttpWebRequest request = (HttpWebRequest)result.AsyncState;
+            HttpWebRequest request = ((AuthenticationInfo)result.AsyncState).Request;
             HttpWebResponse response = (HttpWebResponse)request.EndGetResponse(result); // this is what was throwing the exception about the 405 Method Not Allowed
 
             XDocument document = XDocument.Load(response.GetResponseStream());
+            XElement rootElement = document.Root;
 
-            XElement tokenElement = document.Element("Token");
+            XElement tokenElement = rootElement.Element(XName.Get("Token", Properties.Resources.XmlNamespace));
             if (tokenElement != null)
             {
                 Token = new Guid(tokenElement.Value);
