@@ -109,7 +109,7 @@ namespace Aquinas.Api
                 Properties.Resources.AuthenticationUrl);
             Request.Method = "POST";
             Request.ContentType = "application/xml";
-            AuthenticationState state = new AuthenticationState(callback, Request); // anonymous class for storing state
+            AuthenticationState state = new AuthenticationState(callback, Request);
             return Request.BeginGetRequestStream(AuthenticateWriteAndSend, state);
         }
 
@@ -121,9 +121,11 @@ namespace Aquinas.Api
         {
             AuthenticationState state = ((AuthenticationState)result.AsyncState);
             HttpWebRequest request = state.Request;
-            Stream requestStream = request.EndGetRequestStream(result); // Should this be closed or does HttpWebRequest do that itself?
-            XDocument requestBody = BuildRequestBody();
-            requestBody.Save(requestStream);
+            using (Stream requestStream = request.EndGetRequestStream(result))
+            {
+                XDocument requestBody = BuildRequestBody();
+                requestBody.Save(requestStream);
+            }
             request.BeginGetResponse(state.Callback, this);
         }
 
