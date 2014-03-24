@@ -152,7 +152,7 @@ namespace Aquinas
                 XElement chosenName = basicInfo.Element(XName.Get("ChosenName", Properties.Resources.XmlNamespace));
                 if (chosenName != null)
                 {
-                    FirstName = chosenName.Value;
+                    FirstName = chosenName.Value.Trim();
                     StudentNameLoaded.Raise(this, new StudentUpdateEventArgs(this));
                 }
                 else
