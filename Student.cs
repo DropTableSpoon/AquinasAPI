@@ -123,7 +123,7 @@ namespace Aquinas
             else
             {
                 // badly formed XML data
-                throw new NullReferenceException(Properties.Resources.ExceptionMalformedXml);
+                throw new Exception(Properties.Resources.ExceptionMalformedXml);
             }
         }
 
@@ -146,13 +146,13 @@ namespace Aquinas
                 else
                 {
                     // student name not present in data
-                    throw new NullReferenceException(Properties.Resources.ExceptionStudentNameNotPresent);
+                    throw new Exception(Properties.Resources.ExceptionStudentNameNotPresent);
                 }
             }
             else
             {
                 // badly formed XML data
-                throw new NullReferenceException(Properties.Resources.ExceptionMalformedXml);
+                throw new Exception(Properties.Resources.ExceptionMalformedXml);
             }
         }
 
