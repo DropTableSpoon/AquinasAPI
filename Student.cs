@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Xml.Linq;
 using Aquinas.Api;
+using Aquinas.Timetable;
 
 namespace Aquinas
 {
@@ -62,11 +63,18 @@ namespace Aquinas
         }
 
         /// <summary>
+        /// The timetable of the student.
+        /// </summary>
+        public CollegeTimetable<StudentCollegeDay> Timetable
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
         /// The authentication info for this student.
         /// </summary>
         private AuthenticationInfo AuthInfo;
-
-        public XElement[] Timetable;
 
         /// <summary>
         /// Initialises a new Student object.
@@ -117,7 +125,11 @@ namespace Aquinas
             XElement timetableInfo = basicInfoDocument.Element(XName.Get("ArrayOfTimetableSession", Properties.Resources.XmlNamespace));
             if (timetableInfo != null)
             {
-                Timetable = timetableInfo.Elements(XName.Get("TimetableSession", Properties.Resources.XmlNamespace)).ToArray();
+                XElement[] timetableSessions = timetableInfo
+                    .Elements(XName.Get("TimetableSession", Properties.Resources.XmlNamespace))
+                    .ToArray();
+                Timetable = new CollegeTimetable<StudentCollegeDay>();
+                Timetable.AddLessons(timetableSessions);
                 TimetableDataLoaded.Raise(this, new StudentUpdateEventArgs(this));
             }
             else

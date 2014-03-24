@@ -49,6 +49,10 @@
     <Compile Include="Student.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StudentUpdateEventArgs.cs" />
+    <Compile Include="Timetable\CollegeDay.cs" />
+    <Compile Include="Timetable\CollegeTimetable.cs" />
+    <Compile Include="Timetable\Lesson.cs" />
+    <Compile Include="Timetable\StudentCollegeDay.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
