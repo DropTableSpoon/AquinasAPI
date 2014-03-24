@@ -83,5 +83,10 @@ namespace Aquinas.Api
         /// An API request to get basic student details.
         /// </summary>
         public const string GetStudentName = "Student/GetStudentName";
+
+        /// <summary>
+        /// An API request to get student timetable data.
+        /// </summary>
+        public const string GetTimetableData = "Student/gettimetable";
     }
 }
