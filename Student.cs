@@ -17,7 +17,7 @@ namespace Aquinas
         public event EventHandler<StudentUpdateEventArgs> Authenticated;
 
         /// <summary>
-        /// Raised when this student's name is loaded.
+        /// Raised when this student's basic details is loaded.
         /// </summary>
         public event EventHandler<StudentUpdateEventArgs> StudentDetailsLoaded;
 
@@ -36,6 +36,15 @@ namespace Aquinas
         }
 
         /// <summary>
+        /// The surname of the student.
+        /// </summary>
+        public string Surname
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
         /// The full name of the student.
         /// </summary>
         public string FullName
@@ -44,7 +53,7 @@ namespace Aquinas
             private set;
         }
 
-        public string Fornames
+        public string Forenames
         {
             get;
             private set;
@@ -169,7 +178,7 @@ namespace Aquinas
                 XElement forenames = basicInfo.Element(XName.Get("Forename", Properties.Resources.XmlNamespace));
                 if (forenames != null)
                 {
-                    Fornames = forenames.Value.Trim();
+                    Forenames = forenames.Value.Trim();
                 }
                 else
                 {
@@ -180,14 +189,15 @@ namespace Aquinas
                 XElement lastName = basicInfo.Element(XName.Get("Surname", Properties.Resources.XmlNamespace));
                 if (lastName != null)
                 {
-                    FullName = forenames.Value.Trim() + ' ' + lastName.Value.Trim();
-                    StudentDetailsLoaded.Raise(this, new StudentUpdateEventArgs(this));
+                    Surname = lastName.Value.Trim();
                 }
                 else
                 {
                     // student name not present in data
                     throw new Exception(Properties.Resources.ExceptionStudentLastnameNotPresent);
                 }
+                FullName = String.Format("{0} {1}", Forenames, Surname);
+                StudentDetailsLoaded.Raise(this, new StudentUpdateEventArgs(this));
             }
             else
             {
