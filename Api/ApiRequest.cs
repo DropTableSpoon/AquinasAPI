@@ -82,7 +82,7 @@ namespace Aquinas.Api
         /// <summary>
         /// An API request to get basic student details.
         /// </summary>
-        public const string GetStudentName = "Student/GetStudentName";
+        public const string GetStudentDetails = "Student/GetStudentDetails";
 
         /// <summary>
         /// An API request to get student timetable data.

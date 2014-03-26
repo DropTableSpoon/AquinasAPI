@@ -19,7 +19,7 @@ namespace Aquinas
         /// <summary>
         /// Raised when this student's name is loaded.
         /// </summary>
-        public event EventHandler<StudentUpdateEventArgs> StudentNameLoaded;
+        public event EventHandler<StudentUpdateEventArgs> StudentDetailsLoaded;
 
         /// <summary>
         /// Raised when this student's timetable data is loaded.
@@ -39,6 +39,12 @@ namespace Aquinas
         /// The full name of the student.
         /// </summary>
         public string FullName
+        {
+            get;
+            private set;
+        }
+
+        public string Fornames
         {
             get;
             private set;
@@ -106,8 +112,8 @@ namespace Aquinas
             AuthInfo.EndAuthenticate(result);
             Authenticated.Raise(this, new StudentUpdateEventArgs(this));
 
-            // Get student name
-            ApiRequest basicInfoRequest = new ApiRequest(AuthInfo, ApiRequest.GetStudentName);
+            // Get student details
+            ApiRequest basicInfoRequest = new ApiRequest(AuthInfo, ApiRequest.GetStudentDetails);
             basicInfoRequest.BeginApiRequest(BasicInfoCallback);
 
             // Get timetable data
@@ -146,19 +152,41 @@ namespace Aquinas
         private void BasicInfoCallback(IAsyncResult result)
         {
             XDocument basicInfoDocument = ((ApiRequest)result.AsyncState).EndApiRequest(result);
-            XElement basicInfo = basicInfoDocument.Element(XName.Get("StudentName", Properties.Resources.XmlNamespace));
+            XElement basicInfo = basicInfoDocument.Element(XName.Get("StudentDetails", Properties.Resources.XmlNamespace));
             if (basicInfo != null)
             {
                 XElement chosenName = basicInfo.Element(XName.Get("ChosenName", Properties.Resources.XmlNamespace));
                 if (chosenName != null)
                 {
                     FirstName = chosenName.Value.Trim();
-                    StudentNameLoaded.Raise(this, new StudentUpdateEventArgs(this));
                 }
                 else
                 {
                     // student name not present in data
                     throw new Exception(Properties.Resources.ExceptionStudentNameNotPresent);
+                }
+
+                XElement forenames = basicInfo.Element(XName.Get("Forename", Properties.Resources.XmlNamespace));
+                if (forenames != null)
+                {
+                    Fornames = forenames.Value.Trim();
+                }
+                else
+                {
+                    // student name not present in data
+                    throw new Exception(Properties.Resources.ExceptionStudentForenamesNotPresent);
+                }
+
+                XElement lastName = basicInfo.Element(XName.Get("Surname", Properties.Resources.XmlNamespace));
+                if (lastName != null)
+                {
+                    FullName = forenames.Value.Trim() + ' ' + lastName.Value.Trim();
+                    StudentDetailsLoaded.Raise(this, new StudentUpdateEventArgs(this));
+                }
+                else
+                {
+                    // student name not present in data
+                    throw new Exception(Properties.Resources.ExceptionStudentLastnameNotPresent);
                 }
             }
             else

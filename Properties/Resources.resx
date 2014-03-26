@@ -135,6 +135,12 @@
   <data name="ExceptionNotYetAuthenticated" xml:space="preserve">
     <value>This AuthenticationInfo object has not yet been authenticated. Use the BeginAuthenticate method to authenticate.</value>
   </data>
+  <data name="ExceptionStudentForenamesNotPresent" xml:space="preserve">
+    <value>Student's forenames not present in the document.</value>
+  </data>
+  <data name="ExceptionStudentLastnameNotPresent" xml:space="preserve">
+    <value>Student's last name not present in the document</value>
+  </data>
   <data name="ExceptionStudentNameNotPresent" xml:space="preserve">
     <value>Student's chosen name not present in the document.</value>
   </data>
