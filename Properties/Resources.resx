@@ -129,20 +129,14 @@
   <data name="ExceptionBadStatus" xml:space="preserve">
     <value>Unexpected status: {0}</value>
   </data>
+  <data name="ExceptionDataNotPresent" xml:space="preserve">
+    <value>Data is missing from returned XML document.</value>
+  </data>
   <data name="ExceptionMalformedXml" xml:space="preserve">
     <value>No root tag present or otherwise malformed XML.</value>
   </data>
   <data name="ExceptionNotYetAuthenticated" xml:space="preserve">
     <value>This AuthenticationInfo object has not yet been authenticated. Use the BeginAuthenticate method to authenticate.</value>
-  </data>
-  <data name="ExceptionStudentForenamesNotPresent" xml:space="preserve">
-    <value>Student's forenames not present in the document.</value>
-  </data>
-  <data name="ExceptionStudentLastnameNotPresent" xml:space="preserve">
-    <value>Student's last name not present in the document</value>
-  </data>
-  <data name="ExceptionStudentNameNotPresent" xml:space="preserve">
-    <value>Student's chosen name not present in the document.</value>
   </data>
   <data name="ExceptionTokenNotReceived" xml:space="preserve">
     <value>A token was not received from the server.</value>

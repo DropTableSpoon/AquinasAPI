@@ -17,7 +17,7 @@ namespace Aquinas
         public event EventHandler<StudentUpdateEventArgs> Authenticated;
 
         /// <summary>
-        /// Raised when this student's name is loaded.
+        /// Raised when this student's basic details is loaded.
         /// </summary>
         public event EventHandler<StudentUpdateEventArgs> StudentDetailsLoaded;
 
@@ -36,6 +36,15 @@ namespace Aquinas
         }
 
         /// <summary>
+        /// The surname of the student.
+        /// </summary>
+        public string Surname
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
         /// The full name of the student.
         /// </summary>
         public string FullName
@@ -44,7 +53,7 @@ namespace Aquinas
             private set;
         }
 
-        public string Fornames
+        public string Forenames
         {
             get;
             private set;
@@ -141,7 +150,7 @@ namespace Aquinas
             else
             {
                 // badly formed XML data
-                throw new Exception(Properties.Resources.ExceptionMalformedXml);
+                throw new MalformedDataException(Properties.Resources.ExceptionMalformedXml);
             }
         }
 
@@ -155,44 +164,32 @@ namespace Aquinas
             XElement basicInfo = basicInfoDocument.Element(XName.Get("StudentDetails", Properties.Resources.XmlNamespace));
             if (basicInfo != null)
             {
-                XElement chosenName = basicInfo.Element(XName.Get("ChosenName", Properties.Resources.XmlNamespace));
-                if (chosenName != null)
+                try
                 {
+                    XElement chosenName = basicInfo.Element(XName.Get("ChosenName", Properties.Resources.XmlNamespace));
                     FirstName = chosenName.Value.Trim();
-                }
-                else
-                {
-                    // student name not present in data
-                    throw new Exception(Properties.Resources.ExceptionStudentNameNotPresent);
-                }
 
-                XElement forenames = basicInfo.Element(XName.Get("Forename", Properties.Resources.XmlNamespace));
-                if (forenames != null)
-                {
-                    Fornames = forenames.Value.Trim();
-                }
-                else
-                {
-                    // student name not present in data
-                    throw new Exception(Properties.Resources.ExceptionStudentForenamesNotPresent);
-                }
+                    XElement forenames = basicInfo.Element(XName.Get("Forename", Properties.Resources.XmlNamespace));
+                    Forenames = forenames.Value.Trim();
 
-                XElement lastName = basicInfo.Element(XName.Get("Surname", Properties.Resources.XmlNamespace));
-                if (lastName != null)
-                {
-                    FullName = forenames.Value.Trim() + ' ' + lastName.Value.Trim();
+                    XElement lastName = basicInfo.Element(XName.Get("Surname", Properties.Resources.XmlNamespace));
+                    Surname = lastName.Value.Trim();
+
+                    FullName = String.Format("{0} {1}", Forenames, Surname);
                     StudentDetailsLoaded.Raise(this, new StudentUpdateEventArgs(this));
                 }
-                else
+                catch (NullReferenceException ex)
                 {
-                    // student name not present in data
-                    throw new Exception(Properties.Resources.ExceptionStudentLastnameNotPresent);
+                    throw new MalformedDataException(Properties.Resources.ExceptionDataNotPresent, ex);
+                    /* Merged the error handling into one try-catch block because if one part of the data
+                     * is missing, the rest most likely will be too (unless the API changes in which case
+                     * we know what the issue is anyway) so it should not cause any problems */
                 }
             }
             else
             {
                 // badly formed XML data
-                throw new Exception(Properties.Resources.ExceptionMalformedXml);
+                throw new MalformedDataException(Properties.Resources.ExceptionMalformedXml);
             }
         }
 
