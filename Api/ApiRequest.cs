@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using System.Reflection;
 using System.Xml.Linq;
 
 namespace Aquinas.Api
@@ -25,7 +26,19 @@ namespace Aquinas.Api
                 throw new InvalidOperationException(Properties.Resources.ExceptionUnauthenticatedState);
             WebRequest = System.Net.WebRequest.CreateHttp(
                 CreateApiUrl(authInfo, requestPath));
-            WebRequest.ContentType = "application/xml";
+            WebRequest.Accept = "application/xml";
+
+            PropertyInfo headerInfo = WebRequest.GetType().GetProperty("UserAgent");
+
+            if (headerInfo != null)
+            {
+                headerInfo.SetValue(WebRequest, "MyAquinasMobileAPI", null);
+            }
+            else
+            {
+                WebRequest.Headers[HttpRequestHeader.UserAgent] = "MyAquinasMobileAPI";
+            }
+            
             WebRequest.Headers["AuthToken"] = authInfo.Token.ToString();
         }
 

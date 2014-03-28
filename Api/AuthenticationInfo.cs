@@ -2,6 +2,7 @@
 using System.IO;
 using System.Net;
 using System.Linq;
+using System.Reflection;
 using System.Xml.Linq;
 
 namespace Aquinas.Api
@@ -109,6 +110,18 @@ namespace Aquinas.Api
                 Properties.Resources.AuthenticationUrl);
             Request.Method = "POST";
             Request.ContentType = "application/xml";
+            PropertyInfo headerInfo = Request.GetType().GetProperty("UserAgent");
+
+            if (headerInfo != null)
+            {
+                headerInfo.SetValue(Request, "MyAquinasMobileAPI", null);
+            }
+            else
+            {
+                Request.Headers[HttpRequestHeader.UserAgent] = "MyAquinasMobileAPI";
+            }
+
+            Request.Accept = "application/xml"; //Had to add this to stop the server returning JSON
             AuthenticationState state = new AuthenticationState(callback, Request);
             return Request.BeginGetRequestStream(AuthenticateWriteAndSend, state);
         }
