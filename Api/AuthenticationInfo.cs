@@ -24,10 +24,9 @@ namespace Aquinas.Api
         /// <summary>
         /// The user's password.
         /// </summary>
-        public string Password
+        private string Password
         {
-            get;
-            private set;
+            get; set;
         }
 
         /// <summary>
