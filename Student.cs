@@ -89,7 +89,7 @@ namespace Aquinas
         /// <summary>
         /// The authentication info for this student.
         /// </summary>
-        private AuthenticationInfo AuthInfo;
+        public AuthenticationInfo AuthInfo;
 
         /// <summary>
         /// Initialises a new Student object.
@@ -97,8 +97,38 @@ namespace Aquinas
         /// <param name="aquinasNumber">The short-form Aquinas number of the student.</param>
         public Student(string aquinasNumber)
         {
-            aquinasNumber = aquinasNumber.ToUpper();
-            AdmissionNumber = GetAdmissionNumber(aquinasNumber);
+            AquinasNumber = aquinasNumber.ToUpper();
+            AdmissionNumber = GetAdmissionNumber(AquinasNumber);
+        }
+
+        /// <summary>
+        /// Initialises a new Student object with the given token
+        /// </summary>
+        /// <param name="aquinasNumber">The short-form Aquinas number of the student.</param>
+        /// <param name="token">The student's Authentication Token.</param>
+        public Student(string aquinasNumber, Guid token)
+        {
+            AquinasNumber = aquinasNumber.ToUpper();
+            AdmissionNumber = GetAdmissionNumber(AquinasNumber);
+            AuthInfo = new AuthenticationInfo(AdmissionNumber, null, token);
+        }
+
+        /// <summary>
+        /// Begins an Async request to get the student's details
+        /// </summary>
+        public void GetDetails()
+        {
+            ApiRequest basicInfoRequest = new ApiRequest(AuthInfo, ApiRequest.GetStudentDetails);
+            basicInfoRequest.BeginApiRequest(BasicInfoCallback);
+        }
+
+        /// <summary>
+        /// Begins an Async request to get the student's Timetable
+        /// </summary>
+        public void GetTimetable()
+        {
+            ApiRequest timetableRequest = new ApiRequest(AuthInfo, ApiRequest.GetTimetableData);
+            timetableRequest.BeginApiRequest(TimetableCallback);
         }
 
         /// <summary>
@@ -122,12 +152,10 @@ namespace Aquinas
             Authenticated.Raise(this, new StudentUpdateEventArgs(this));
 
             // Get student details
-            ApiRequest basicInfoRequest = new ApiRequest(AuthInfo, ApiRequest.GetStudentDetails);
-            basicInfoRequest.BeginApiRequest(BasicInfoCallback);
+            GetDetails();
 
             // Get timetable data
-            ApiRequest timetableRequest = new ApiRequest(AuthInfo, ApiRequest.GetTimetableData);
-            timetableRequest.BeginApiRequest(TimetableCallback);
+            GetTimetable();
         }
 
         /// <summary>
