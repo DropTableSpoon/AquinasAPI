@@ -41,8 +41,8 @@ namespace Aquinas.Timetable
         {
             get
             {
-                return StudentLessons.ContainsKey("2R") ?
-                    StudentLessons["2R"] : Lesson.Empty;
+                return StudentLessons.ContainsKey("Registration") ?
+                    StudentLessons["Registration"] : Lesson.Empty;
             }
         }
 
