@@ -56,6 +56,15 @@ namespace Aquinas.Timetable
         }
 
         /// <summary>
+        /// Gets or sets which period this lesson is in.
+        /// </summary>
+        public string Period
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// Creates a new instance of the Lesson structure.
         /// </summary>
         /// <param name="classCode">The class code of this lesson, in the format XX-XX-XX-XX.</param>
@@ -85,7 +94,7 @@ namespace Aquinas.Timetable
         {
             get
             {
-                return new Lesson("-", "Free", "-", "-") { Free = true };
+                return new Lesson("-", "Free", "-", "-") { Free = true, Period = "-" };
             }
         }
     }

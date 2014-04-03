@@ -23,6 +23,7 @@ namespace Aquinas.Timetable
         /// <param name="lesson">The lesson data.</param>
         public void AddLesson(string period, Lesson lesson)
         {
+            lesson.Period = period;
             StudentLessons.Add(period == "2R" ? "Registration" : period, lesson);
         }
 
