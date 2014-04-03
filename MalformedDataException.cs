@@ -8,21 +8,21 @@ namespace Aquinas
     /// <summary>
     /// Represents errors that occur due to received data being of the incorrect format.
     /// </summary>
-    public class MalformedDataException : Exception
+    public class MalformedDataException : ApiException
     {
         /// <summary>
         /// Initializes a new instance of the MalformedDataException class.
         /// </summary>
-        public MalformedDataException() : base() { }
+        public MalformedDataException() : base(ApiExceptionDetails.MalformedData) { }
 
         /// <summary>
         /// Initializes a new instance of the MalformedDataException class.
         /// </summary>
-        public MalformedDataException(string message) : base(message) { }
+        public MalformedDataException(string message) : base(message, ApiExceptionDetails.MalformedData) { }
 
         /// <summary>
         /// Initializes a new instance of the MalformedDataException class.
         /// </summary>
-        public MalformedDataException(string message, Exception inner) : base(message, inner) { }
+        public MalformedDataException(string message, Exception inner) : base(message, ApiExceptionDetails.MalformedData, inner) { }
     }
 }

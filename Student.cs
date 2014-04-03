@@ -14,7 +14,7 @@ namespace Aquinas
         /// <summary>
         /// Raised when this student is authenticated with the Aquinas server.
         /// </summary>
-        public event EventHandler<StudentUpdateEventArgs> Authenticated;
+        public event EventHandler<StudentUpdateEventArgs> StudentAuthenticated;
 
         /// <summary>
         /// Raised when this student's basic details is loaded.
@@ -25,6 +25,11 @@ namespace Aquinas
         /// Raised when this student's timetable data is loaded.
         /// </summary>
         public event EventHandler<StudentUpdateEventArgs> TimetableDataLoaded;
+
+        /// <summary>
+        /// Raised when an API exception is thrown on an asynchronous thread.
+        /// </summary>
+        public event EventHandler<ApiExceptionEventArgs> ApiExceptionThrown;
 
         /// <summary>
         /// The first (chosen) name of the student.
@@ -92,6 +97,17 @@ namespace Aquinas
         public AuthenticationInfo AuthInfo;
 
         /// <summary>
+        /// Gets whether this Student has been authenticated by the MyAquinas server.
+        /// </summary>
+        public bool Authenticated
+        {
+            get
+            {
+                return AuthInfo.Authenticated;
+            }
+        }
+
+        /// <summary>
         /// Initialises a new Student object.
         /// </summary>
         /// <param name="aquinasNumber">The short-form Aquinas number of the student.</param>
@@ -118,8 +134,15 @@ namespace Aquinas
         /// </summary>
         public void GetDetails()
         {
-            ApiRequest basicInfoRequest = new ApiRequest(AuthInfo, ApiRequest.GetStudentDetails);
-            basicInfoRequest.BeginApiRequest(BasicInfoCallback);
+            if (!Authenticated)
+            {
+                ApiExceptionThrown.Raise(this, new ApiExceptionEventArgs(ApiExceptionDetails.NotAuthenticated));
+            }
+            else
+            {
+                ApiRequest basicInfoRequest = new ApiRequest(AuthInfo, ApiRequest.GetStudentDetails);
+                basicInfoRequest.BeginApiRequest(BasicInfoCallback);
+            }
         }
 
         /// <summary>
@@ -127,8 +150,16 @@ namespace Aquinas
         /// </summary>
         public void GetTimetable()
         {
-            ApiRequest timetableRequest = new ApiRequest(AuthInfo, ApiRequest.GetTimetableData);
-            timetableRequest.BeginApiRequest(TimetableCallback);
+            if (!Authenticated)
+            {
+                ApiExceptionThrown.Raise(this, new ApiExceptionEventArgs(ApiExceptionDetails.NotAuthenticated));
+            }
+            else
+            {
+                if (!Authenticated) throw new ApiException(ApiExceptionDetails.NotAuthenticated);
+                ApiRequest timetableRequest = new ApiRequest(AuthInfo, ApiRequest.GetTimetableData);
+                timetableRequest.BeginApiRequest(TimetableCallback);
+            }
         }
 
         /// <summary>
@@ -148,14 +179,21 @@ namespace Aquinas
         /// <param name="result">The status of the asynchronous operation.</param>
         private void AuthenticationCallback(IAsyncResult result)
         {
-            AuthInfo.EndAuthenticate(result);
-            Authenticated.Raise(this, new StudentUpdateEventArgs(this));
+            try
+            {
+                AuthInfo.EndAuthenticate(result);
+                StudentAuthenticated.Raise(this, new StudentUpdateEventArgs(this));
 
-            // Get student details
-            GetDetails();
+                // Get student details
+                GetDetails();
 
-            // Get timetable data
-            GetTimetable();
+                // Get timetable data
+                GetTimetable();
+            }
+            catch (ApiException e)
+            {
+                ApiExceptionThrown.Raise(this, new ApiExceptionEventArgs(e.Details));
+            }
         }
 
         /// <summary>
@@ -164,21 +202,28 @@ namespace Aquinas
         /// <param name="result">The status of the asynchronous operation.</param>
         private void TimetableCallback(IAsyncResult result)
         {
-            XDocument basicInfoDocument = ((ApiRequest)result.AsyncState).EndApiRequest(result);
-            XElement timetableInfo = basicInfoDocument.Element(XName.Get("ArrayOfTimetableSession", Properties.Resources.XmlNamespace));
-            if (timetableInfo != null)
+            try
             {
-                XElement[] timetableSessions = timetableInfo
-                    .Elements(XName.Get("TimetableSession", Properties.Resources.XmlNamespace))
-                    .ToArray();
-                Timetable = new CollegeTimetable<StudentCollegeDay>();
-                Timetable.AddLessons(timetableSessions);
-                TimetableDataLoaded.Raise(this, new StudentUpdateEventArgs(this));
+                XDocument basicInfoDocument = ((ApiRequest)result.AsyncState).EndApiRequest(result);
+                XElement timetableInfo = basicInfoDocument.Element(XName.Get("ArrayOfTimetableSession", Properties.Resources.XmlNamespace));
+                if (timetableInfo != null)
+                {
+                    XElement[] timetableSessions = timetableInfo
+                        .Elements(XName.Get("TimetableSession", Properties.Resources.XmlNamespace))
+                        .ToArray();
+                    Timetable = new CollegeTimetable<StudentCollegeDay>();
+                    Timetable.AddLessons(timetableSessions);
+                    TimetableDataLoaded.Raise(this, new StudentUpdateEventArgs(this));
+                }
+                else
+                {
+                    // badly formed XML data
+                    throw new MalformedDataException(Properties.Resources.ExceptionMalformedXml);
+                }
             }
-            else
+            catch (MalformedDataException ex)
             {
-                // badly formed XML data
-                throw new MalformedDataException(Properties.Resources.ExceptionMalformedXml);
+                ApiExceptionThrown.Raise(this, new ApiExceptionEventArgs(ex.Details));
             }
         }
 
@@ -188,36 +233,43 @@ namespace Aquinas
         /// <param name="result">The status of the asynchronous operation.</param>
         private void BasicInfoCallback(IAsyncResult result)
         {
-            XDocument basicInfoDocument = ((ApiRequest)result.AsyncState).EndApiRequest(result);
-            XElement basicInfo = basicInfoDocument.Element(XName.Get("StudentDetails", Properties.Resources.XmlNamespace));
-            if (basicInfo != null)
+            try
             {
-                try
+                XDocument basicInfoDocument = ((ApiRequest)result.AsyncState).EndApiRequest(result);
+                XElement basicInfo = basicInfoDocument.Element(XName.Get("StudentDetails", Properties.Resources.XmlNamespace));
+                if (basicInfo != null)
                 {
-                    XElement chosenName = basicInfo.Element(XName.Get("ChosenName", Properties.Resources.XmlNamespace));
-                    FirstName = chosenName.Value.Trim();
+                    try
+                    {
+                        XElement chosenName = basicInfo.Element(XName.Get("ChosenName", Properties.Resources.XmlNamespace));
+                        FirstName = chosenName.Value.Trim();
 
-                    XElement forenames = basicInfo.Element(XName.Get("Forename", Properties.Resources.XmlNamespace));
-                    Forenames = forenames.Value.Trim();
+                        XElement forenames = basicInfo.Element(XName.Get("Forename", Properties.Resources.XmlNamespace));
+                        Forenames = forenames.Value.Trim();
 
-                    XElement lastName = basicInfo.Element(XName.Get("Surname", Properties.Resources.XmlNamespace));
-                    Surname = lastName.Value.Trim();
+                        XElement lastName = basicInfo.Element(XName.Get("Surname", Properties.Resources.XmlNamespace));
+                        Surname = lastName.Value.Trim();
 
-                    FullName = String.Format("{0} {1}", Forenames, Surname);
-                    StudentDetailsLoaded.Raise(this, new StudentUpdateEventArgs(this));
+                        FullName = String.Format("{0} {1}", Forenames, Surname);
+                        StudentDetailsLoaded.Raise(this, new StudentUpdateEventArgs(this));
+                    }
+                    catch (NullReferenceException ex)
+                    {
+                        throw new MalformedDataException(Properties.Resources.ExceptionDataNotPresent, ex);
+                        /* Merged the error handling into one try-catch block because if one part of the data
+                         * is missing, the rest most likely will be too (unless the API changes in which case
+                         * we know what the issue is anyway) so it should not cause any problems */
+                    }
                 }
-                catch (NullReferenceException ex)
+                else
                 {
-                    throw new MalformedDataException(Properties.Resources.ExceptionDataNotPresent, ex);
-                    /* Merged the error handling into one try-catch block because if one part of the data
-                     * is missing, the rest most likely will be too (unless the API changes in which case
-                     * we know what the issue is anyway) so it should not cause any problems */
+                    // badly formed XML data
+                    throw new MalformedDataException(Properties.Resources.ExceptionMalformedXml);
                 }
             }
-            else
+            catch (MalformedDataException ex)
             {
-                // badly formed XML data
-                throw new MalformedDataException(Properties.Resources.ExceptionMalformedXml);
+                ApiExceptionThrown.Raise(this, new ApiExceptionEventArgs(ex.Details));
             }
         }
 

@@ -148,23 +148,37 @@ namespace Aquinas.Api
         /// <returns>Returns this object.</returns>
         public AuthenticationInfo EndAuthenticate(IAsyncResult result)
         {
-            HttpWebRequest request = (result.AsyncState as AuthenticationInfo).Request;
-            HttpWebResponse response = (HttpWebResponse)request.EndGetResponse(result); // this is what was throwing the exception about the 405 Method Not Allowed
-
-            XDocument document = XDocument.Load(response.GetResponseStream());
-            XElement rootElement = document.Root;
-
-            XElement tokenElement = rootElement.Element(XName.Get("Token", Properties.Resources.XmlNamespace));
-            if (tokenElement != null)
+            try
             {
-                Token = new Guid(tokenElement.Value);
-                Authenticated = true;
+                HttpWebRequest request = (result.AsyncState as AuthenticationInfo).Request;
+                HttpWebResponse response = (HttpWebResponse)request.EndGetResponse(result); // this is what was throwing the exception about the 405 Method Not Allowed
+
+                XDocument document = XDocument.Load(response.GetResponseStream());
+                XElement rootElement = document.Root;
+
+                XElement tokenElement = rootElement.Element(XName.Get("Token", Properties.Resources.XmlNamespace));
+                if (tokenElement != null)
+                {
+                    Token = new Guid(tokenElement.Value);
+                    Authenticated = true;
+                }
+                else
+                {
+                    throw new NullReferenceException(Properties.Resources.ExceptionTokenNotReceived);
+                }
+                return this;
             }
-            else
+            catch (WebException e)
             {
-                throw new NullReferenceException(Properties.Resources.ExceptionTokenNotReceived);
+                if (e.Message.Contains("(500)"))
+                {
+                    throw new ApiException(e.Message, ApiExceptionDetails.BadLogin, e);
+                }
+                else
+                {
+                    throw new ApiException(e.Message, ApiExceptionDetails.BadHttpStatus, e);
+                }
             }
-            return this;
         }
     }
 }

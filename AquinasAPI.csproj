@@ -37,6 +37,8 @@
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApiException.cs" />
+    <Compile Include="ApiExceptionEventArgs.cs" />
     <Compile Include="Api\ApiRequest.cs" />
     <Compile Include="Api\AuthenticationInfo.cs" />
     <Compile Include="Api\AuthenticationState.cs" />
