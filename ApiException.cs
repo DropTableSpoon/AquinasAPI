@@ -6,7 +6,7 @@ using System.Text;
 namespace Aquinas
 {
     /// <summary>
-    /// Represents an error thrown due to data provided to the Aquinas API.
+    /// Represents an error thrown due to data provided to the Aquinas API layer.
     /// </summary>
     public class ApiException : Exception
     {
