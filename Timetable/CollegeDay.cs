@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +9,7 @@ namespace Aquinas.Timetable
     /// <summary>
     /// Contains the lessons to be attended by a user.
     /// </summary>
-    public class CollegeDay
+    public class CollegeDay : IEnumerable<Lesson>
     {
         /// <summary>
         /// Holds all of the user's lessons for this day.
@@ -23,6 +24,16 @@ namespace Aquinas.Timetable
         public void AddLesson(string period, Lesson lesson)
         {
             StudentLessons.Add(period == "2R" ? "Registration" : period, lesson);
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return StudentLessons.Values.GetEnumerator();
+        }
+
+        IEnumerator<Lesson> IEnumerable<Lesson>.GetEnumerator()
+        {
+            return StudentLessons.Values.GetEnumerator();
         }
     }
 }

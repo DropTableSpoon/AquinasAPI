@@ -10,7 +10,7 @@ namespace Aquinas.Timetable
     /// Represents a college timetable.
     /// </summary>
     /// <typeparam name="TDay">The type of day the user has - usually StudentCollegeDay.</typeparam>
-    public class CollegeTimetable<TDay> where TDay : CollegeDay, new()
+    public class CollegeTimetable<TDay> : IEnumerable<TDay> where TDay : CollegeDay, new()
     {
         /// <summary>
         /// All days in the college week.
@@ -72,6 +72,16 @@ namespace Aquinas.Timetable
             {
                 AddLesson(session);
             }
+        }
+
+        public IEnumerator<TDay> GetEnumerator()
+        {
+            return Days.Values.GetEnumerator();
+        }
+
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        {
+            return Days.Values.GetEnumerator();
         }
     }
 }
