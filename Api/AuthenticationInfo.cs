@@ -105,7 +105,7 @@ namespace Aquinas.Api
         /// <returns>An XDocument containing the result of the request.</returns>
         public IAsyncResult BeginAuthenticate(AsyncCallback callback)
         {
-            Request = WebRequest.CreateHttp(
+            Request = (HttpWebRequest)System.Net.WebRequest.Create(
                 Properties.Resources.AuthenticationUrl);
             Request.Method = "POST";
             Request.ContentType = "application/xml";

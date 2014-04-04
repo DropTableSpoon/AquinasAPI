@@ -24,7 +24,7 @@ namespace Aquinas.Api
         {
             if (!authInfo.Authenticated)
                 throw new InvalidOperationException(Properties.Resources.ExceptionUnauthenticatedState);
-            WebRequest = System.Net.WebRequest.CreateHttp(
+            WebRequest = (HttpWebRequest)System.Net.WebRequest.Create(
                 CreateApiUrl(authInfo, requestPath));
             WebRequest.Accept = "application/xml";
 
