@@ -185,10 +185,10 @@ namespace Aquinas
                 StudentAuthenticated.Raise(this, new StudentUpdateEventArgs(this));
 
                 // Get student details
-                GetDetails();
+                //GetDetails();
 
                 // Get timetable data
-                GetTimetable();
+                //GetTimetable();
             }
             catch (ApiException e)
             {
