@@ -170,7 +170,7 @@ namespace Aquinas.Api
             }
             catch (WebException e)
             {
-                if (e.Message.Contains("(500)"))
+                if ((int)((HttpWebResponse)e.Response).StatusCode == 500)
                 {
                     throw new ApiException(e.Message, ApiExceptionDetails.BadLogin, e);
                 }
