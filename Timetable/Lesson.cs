@@ -85,7 +85,7 @@ namespace Aquinas.Timetable
             string[] replace = new[] { "L6", "U6", "AS", "A2" };
             foreach (string s in replace)
             {
-                description.Replace(s, "");
+                description = description.Replace(s, "");
             }
             return description.Trim();
         }
