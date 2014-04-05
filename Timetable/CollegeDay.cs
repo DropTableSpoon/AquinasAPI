@@ -24,7 +24,10 @@ namespace Aquinas.Timetable
         public void AddLesson(string period, Lesson lesson)
         {
             lesson.Period = period;
-            StudentLessons.Add(period == "2R" ? "Registration" : period, lesson);
+            if(period == "1R" || period == "2R")
+                StudentLessons.Add("Registration", lesson); // Upper sixth/lower sixth have different registration periods
+            else
+                StudentLessons.Add(period, lesson);
         }
 
         /// <summary>
