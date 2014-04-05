@@ -75,9 +75,19 @@ namespace Aquinas.Timetable
             : this()
         {
             ClassCode = classCode;
-            Description = description.Split(';').First();
+            Description = ExtractLessonName(description.Split(';').First());
             Room = room;
             Tutor = tutor;
+        }
+
+        private string ExtractLessonName(string description)
+        {
+            string[] replace = new[] { "L6", "U6", "AS", "A2" };
+            foreach (string s in replace)
+            {
+                description.Replace(s, "");
+            }
+            return description.Trim();
         }
         
         public override string ToString()
