@@ -29,6 +29,7 @@ namespace Aquinas.Timetable
 
         /// <summary>
         /// Gets a lesson, by period, from this timetable.
+        /// If the lesson is not present in the timetable, an Empty (free) lesson is returned.
         /// </summary>
         /// <param name="lesson">The string representing the period of the lesson.</param>
         /// <returns>The lesson in the timetable with the given period.</returns>
@@ -36,7 +37,7 @@ namespace Aquinas.Timetable
         {
             get
             {
-                return StudentLessons[lesson];
+                return StudentLessons.ContainsKey(lesson) ? StudentLessons[lesson] : Lesson.Empty;
             }
         }
 
