@@ -27,6 +27,19 @@ namespace Aquinas.Timetable
             StudentLessons.Add(period == "2R" ? "Registration" : period, lesson);
         }
 
+        /// <summary>
+        /// Gets a lesson, by period, from this timetable.
+        /// </summary>
+        /// <param name="lesson">The string representing the period of the lesson.</param>
+        /// <returns>The lesson in the timetable with the given period.</returns>
+        public Lesson this[string lesson]
+        {
+            get
+            {
+                return StudentLessons[lesson];
+            }
+        }
+
         IEnumerator IEnumerable.GetEnumerator()
         {
             return StudentLessons.Values.GetEnumerator();
